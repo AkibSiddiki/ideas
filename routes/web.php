@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IdeaController;
 use App\Http\Controllers\ProfileController;
@@ -16,8 +17,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-Route::post('/store', [IdeaController::class, 'store'])->name('store.idea');
+Route::get('/', [IdeaController::class, 'index'])->name('home');
+Route::get('/search/{search}', [IdeaController::class, 'index'])->name('ideas.search');
+
+
+Route::post('/ideas', [IdeaController::class, 'store'])->name('ideas.store');
+
+Route::get('/ideas/{idea}', [IdeaController::class, 'show'])->name('ideas.show');
+
+Route::get('/ideas/{idea}/edit', [IdeaController::class, 'edit'])->name('ideas.edit');
+
+Route::put('/ideas/{idea}', [IdeaController::class, 'update'])->name('ideas.update');
+
+Route::post('/ideas/{idea}/comments', [CommentController::class, 'store'])->name('Comments.store');
+
+
+
+
+Route::delete('/ideas/{id}', [IdeaController::class, 'destroy'])->name('ideas.destroy');
 
 Route::get('/profile', [ProfileController::class, 'index']);
 

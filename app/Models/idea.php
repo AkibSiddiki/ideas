@@ -11,12 +11,18 @@ class idea extends Model
 
     protected $fillable = [
         'idea',
-        'likes'
+        'likes',
+        'user_id'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(user::class, 'user_id');
+    }
 
 
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class, 'idea_id');
     }
 }

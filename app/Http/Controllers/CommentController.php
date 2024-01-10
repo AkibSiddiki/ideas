@@ -10,13 +10,12 @@ class CommentController extends Controller
 {
     public function store(idea $idea)
     {
-        // dd(request()->all());
-        // dd($idea);
         request()->validate([
             "comment" => "required|min:2|max:240",
         ]);
 
         comment::create([
+            'user_id' => auth()->user()->id,
             'idea_id' => $idea->id,
             'comment' => request('comment'),
         ]);

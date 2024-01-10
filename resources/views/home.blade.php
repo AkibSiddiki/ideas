@@ -9,17 +9,22 @@
         @include('shared.leftSideMenu')
     </div>
     <div class="col-6">
-        @if (session()->has('success'))
         @include('shared.successMassage')
-        @endif
         @include('shared.ideaSubmitForm')
-        @foreach ($ideas as $idea)
+        @forelse ($ideas as $idea)
         <div class="mt-3">
             @include('shared.ideaCard')
         </div>
-        @endforeach
+        @empty
+        <div class="card p-4">
+            <p class="text-center">No result founds.</p>
+            <div class="text-center">
+                <a class="btn btn-dark p-2" href="{{route('home')}}">Back To Home</a>
+            </div>
+        </div>
+        @endforelse
         <div class="mt-2">
-            {{$ideas -> links()}}
+            {{$ideas ->withQueryString()->links()}}
         </div>
     </div>
     <div class="col-3">

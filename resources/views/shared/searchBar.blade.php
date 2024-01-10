@@ -4,7 +4,7 @@
     </div>
     <div class="card-body">
         <form action="" method="GET">
-            <input placeholder="..." class="form-control w-100" type="text" name="search">
+            <input value="{{request('search')}}" placeholder="..." class="form-control w-100" type="text" name="search">
             <div class="d-flex justify-content-end mt-2">
                 <button type="submit" class="btn btn-dark">Search</button>
             </div>

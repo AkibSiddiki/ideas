@@ -9,9 +9,7 @@
         @include('shared.leftSideMenu')
     </div>
     <div class="col-6">
-        @if (session()->has('success'))
         @include('shared.successMassage')
-        @endif
         @include('shared.ideaCard')
     </div>
     <div class="col-3">

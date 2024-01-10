@@ -9,15 +9,26 @@
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
+                @guest
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="">Login</a>
+                    <a class="nav-link active" aria-current="page" href="{{route('auth.login')}}">Login</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">Register</a>
+                    <a class="nav-link" href="{{route('auth.create')}}">Register</a>
+                </li>
+                @endguest
+                @auth
+                <li class="nav-item">
+                    <a class="nav-link" href="">
+                        {{Auth::user()->name}}
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">Profile</a>
+                    <a class="nav-link btn-sm" href="{{route('logout')}}">
+                        Logout
+                    </a>
                 </li>
+                @endauth
             </ul>
         </div>
     </div>

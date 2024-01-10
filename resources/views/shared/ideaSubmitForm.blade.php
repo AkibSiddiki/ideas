@@ -1,3 +1,4 @@
+@auth
 <h4> Share yours ideas </h4>
 <div class="row">
     <form action="{{ route('ideas.store') }}" method="post">
@@ -14,3 +15,10 @@
     </form>
 </div>
 <hr>
+@endauth
+@guest
+<div class="d-flex justify-content-between">
+    <h4>Login to Share yours ideas </h4>
+    <a type="submit" class="btn btn-dark" href="{{route('auth.login')}}"> Login </a>
+</div>
+@endguest

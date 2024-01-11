@@ -1,11 +1,11 @@
 @extends('layout.layout')
-@section('title', 'Registration - ')
+@section('title', 'Login - ')
 @section('main')
 <div class="row justify-content-center">
     <div class="col-12 col-sm-8 col-md-6">
         @include('shared.successMassage')
         @include('shared.errorMassage')
-        <form class="form mt-5" action="{{route('users.loginAction')}}" method="post">
+        <form class="form mt-5" action="{{route('users.loginAction')}}" method="POST">
             @csrf
             <h3 class="text-center text-dark">Login</h3>
             <div class="form-group mt-3">

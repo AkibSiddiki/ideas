@@ -19,7 +19,7 @@
                 @endguest
                 @auth
                 <li class="nav-item">
-                    <a class="nav-link" href="">
+                    <a class="nav-link" href="{{route('Users.show', Auth::user()->id)}}">
                         {{Auth::user()->name}}
                     </a>
                 </li>

@@ -1,19 +1,20 @@
+{{-- {{dump(Auth::user()->id)}} --}}
 <div class="card">
     <div class="px-3 pt-4 pb-2">
         <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
-                <img style="width:50px" class="me-2 avatar-sm rounded-circle"
-                    src="https://api.dicebear.com/6.x/fun-emoji/svg?seed={{$idea->user->name}}"
+                <img style="width:50px" class="me-2 avatar-sm rounded-circle" src="{{$idea->user->getUserImage()}}"
                     alt="{{$idea->user->name}}">
                 <div>
-                    <h5 class="card-title mb-0"><a href="#"> {{$idea->user->name}}</a></h5>
+                    <h5 class="card-title mb-0"><a href="{{route('Users.show', $idea->user->id)}}">
+                            {{$idea->user->name}}</a></h5>
                 </div>
             </div>
             @if(!($edit ?? false))
             <div class="d-flex align-items-center">
                 <a class="btn btn-outline-primary mx-1" href="{{route('ideas.show', $idea)}}">view</a>
                 @auth
-                @if (Auth::user()->id==$idea->id)
+                @if (Auth::user()->id==$idea->user_id)
                 <a class="btn btn-outline-primary mx-1" href="{{route('ideas.edit', $idea)}}">Edit</a>
                 <form action="{{route('ideas.destroy', $idea)}}" method="POST">
                     @csrf

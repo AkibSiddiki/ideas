@@ -39,6 +39,7 @@ class AuthController extends Controller
 
     public function loginAction()
     {
+        // dd(request()->all());
         $vali = request()->validate([
             "email" => "required|email",
             "password" => "required|min:6"
@@ -48,7 +49,7 @@ class AuthController extends Controller
             request()->session()->regenerate();
             return redirect()->route('home')->with('success', 'You are Successfully Login!');
         } else {
-            return redirect()->route('auth.login')->withErrors('error', 'Given Email & password does not match!!');
+            return redirect()->route('auth.login')->with('success', 'Given Email & password does not match!!');
         }
     }
 

@@ -19,6 +19,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'bio',
+        'image',
         'email',
         'password',
         'password_confirmation'
@@ -47,6 +49,43 @@ class User extends Authenticatable
 
     public function ideas()
     {
-        return $this->hasMany(idea::class);
+        return $this->hasMany(idea::class)->latest();
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(comment::class);
+    }
+
+    public function getUserImage()
+    {
+        if ($this->image) {
+            return url('storage/' . $this->image);
+        } else return "https://api.dicebear.com/6.x/fun-emoji/svg?seed={$this->image}";
+    }
+
+    public function followers()
+    {
+        return $this->hasMany(Follower::class, 'following_id');
+    }
+
+    public function following()
+    {
+        return $this->hasMany(Follower::class, 'follower_id');
+    }
+
+    public function followersCount()
+    {
+        return $this->followers()->count();
+    }
+
+    public function followingCount()
+    {
+        return $this->following()->count();
+    }
+
+    public function isFollowing(User $user)
+    {
+        return $this->following()->where('following_id', $user->id)->exists();
     }
 }

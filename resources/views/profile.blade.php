@@ -16,8 +16,9 @@
                             alt="{{$user->name}}">
                         <div>
                             @if (!($profileEdit ?? false))
-                            <h3 class="card-title mb-0">{{$user->name}} @auth <span class="badge text-bg-info fs-6">
-                                    {{auth()->user()->isFollowing($user) ? "Following" : "" }} </span>@endauth
+                            <h3 class="card-title mb-0">{{$user->name}} @auth @if ((Auth::user()->id ?? -1) !=
+                                $user->id) <span class="badge text-bg-info fs-6"> {{auth()->user()->isFollowing($user) ?
+                                    "Following" : "" }} </span>@endauth @endif
                             </h3>
                             <span class="fs-6 text-muted">{{$user->email}}</span>
                             @endif

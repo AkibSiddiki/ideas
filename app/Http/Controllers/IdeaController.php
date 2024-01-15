@@ -13,24 +13,24 @@ class IdeaController extends Controller
         $AuthUser = auth()->user();
         if (request()->has('search')) {
             if ($AuthUser) {
-                $ideas = Idea::whereIn('user_id', $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id))->where('idea', 'like', '%' . request()->get('search', '') . '%')->orderBy("created_at", "desc")->paginate(3);
+                $ideas = Idea::with('user', 'comments.user')->whereIn('user_id', $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id))->where('idea', 'like', '%' . request()->get('search', '') . '%')->orderBy("created_at", "desc")->paginate(3);
             } else {
-                $ideas = idea::where('idea', 'like', '%' . request()->get('search', '') . '%')->orderBy("created_at", "desc")->paginate(3);
+                $ideas = idea::with('user', 'comments.user')->where('idea', 'like', '%' . request()->get('search', '') . '%')->orderBy("created_at", "desc")->paginate(3);
             }
         } else {
             if ($AuthUser) {
-                $ideas = Idea::whereIn('user_id', $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id))->orderBy("created_at", "desc")->paginate(3);
+                $ideas = Idea::with('user', 'comments.user')->whereIn('user_id', $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id))->orderBy("created_at", "desc")->paginate(3);
             } else {
-                $ideas = idea::orderBy("created_at", "desc")->paginate(3);
+                $ideas = idea::with('user', 'comments.user')->orderBy("created_at", "desc")->paginate(3);
             }
         }
 
         // $followingUsersIds = $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id);
         // dd($followingUsersIds);
         if ($AuthUser) {
-            $notFollowingUsers = User::whereNotIn('id', $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id))->limit(4)->get();
+            $notFollowingUsers = User::with('user', 'comments.user')->whereNotIn('id', $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id))->limit(4)->get();
         } else {
-            $notFollowingUsers = User::latest()->limit(4)->get();
+            $notFollowingUsers = User::with('user', 'comments.user')->latest()->limit(4)->get();
         }
         // dd($notFollowingUsers);
         return view("home", compact('ideas', 'notFollowingUsers'));

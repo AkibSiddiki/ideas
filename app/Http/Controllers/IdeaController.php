@@ -3,18 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Models\idea;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class IdeaController extends Controller
 {
     public function index()
     {
+        $AuthUser = auth()->user();
         if (request()->has('search')) {
-            $ideas = idea::where('idea', 'like', '%' . request()->get('search', '') . '%')->orderBy("created_at", "desc")->paginate(3);
+            if ($AuthUser) {
+                $ideas = Idea::whereIn('user_id', $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id))->where('idea', 'like', '%' . request()->get('search', '') . '%')->orderBy("created_at", "desc")->paginate(3);
+            } else {
+                $ideas = idea::where('idea', 'like', '%' . request()->get('search', '') . '%')->orderBy("created_at", "desc")->paginate(3);
+            }
         } else {
-            $ideas = idea::orderBy("created_at", "desc")->paginate(3);
+            if ($AuthUser) {
+                $ideas = Idea::whereIn('user_id', $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id))->orderBy("created_at", "desc")->paginate(3);
+            } else {
+                $ideas = idea::orderBy("created_at", "desc")->paginate(3);
+            }
         }
-        return view("home", compact('ideas'));
+
+        // $followingUsersIds = $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id);
+        // dd($followingUsersIds);
+        if ($AuthUser) {
+            $notFollowingUsers = User::whereNotIn('id', $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id))->limit(4)->get();
+        } else {
+            $notFollowingUsers = User::latest()->limit(4)->get();
+        }
+        // dd($notFollowingUsers);
+        return view("home", compact('ideas', 'notFollowingUsers'));
     }
 
     public function store()

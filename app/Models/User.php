@@ -88,4 +88,18 @@ class User extends Authenticatable
     {
         return $this->following()->where('following_id', $user->id)->exists();
     }
+
+    // public function followingIdeas()
+    // {
+    //     return Idea::whereIn('user_id', $this->following()->pluck('following_id'))->latest();
+    // }
+
+
+    // public function notFollowingUsers($limit = 4)
+    // {
+    //     $followingUsersIds = $this->following()->pluck('following_id')->prepend($this->id);
+    //     dd($followingUsersIds);
+
+    //     return User::whereNotIn('id', $followingUsersIds)->limit($limit);
+    // }
 }

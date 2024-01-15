@@ -28,9 +28,9 @@ class IdeaController extends Controller
         // $followingUsersIds = $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id);
         // dd($followingUsersIds);
         if ($AuthUser) {
-            $notFollowingUsers = User::with('user', 'comments.user')->whereNotIn('id', $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id))->limit(4)->get();
+            $notFollowingUsers = User::whereNotIn('id', $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id))->limit(4)->get();
         } else {
-            $notFollowingUsers = User::with('user', 'comments.user')->latest()->limit(4)->get();
+            $notFollowingUsers = User::latest()->limit(4)->get();
         }
         // dd($notFollowingUsers);
         return view("home", compact('ideas', 'notFollowingUsers'));

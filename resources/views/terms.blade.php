@@ -6,7 +6,7 @@
     <div class="col-3">
         @include('shared.leftSideMenu')
     </div>
-    <div class="col-6">
+    <div class="col-9">
         <h1>Terms</h1>
         <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aut, quod similique voluptate possimus rem
             inventore
@@ -37,11 +37,6 @@
             molestias animi eligendi debitis aut officiis obcaecati provident modi repellat laudantium ex deleniti
             sapiente.
         </p>
-    </div>
-    <div class="col-3">
-        @include('shared.searchBar')
-        <div class="mt-3"></div>
-        @include('shared.followBox')
     </div>
 </div>
 @endsection

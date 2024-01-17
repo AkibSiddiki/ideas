@@ -10,20 +10,31 @@ class UserController extends Controller
 {
     public function show($id)
     {
+        $AuthUser = auth()->user();
+
         $user = User::where('id', $id)->first();
         if (request()->has('search')) {
             $Ideas = $user->ideas()->where('idea', 'like', '%' . request()->get('search', '') . '%')->paginate(3);
         } else {
             $Ideas = $user->ideas()->paginate(3);
         }
-        return view('profile', compact('user', 'Ideas'));
+
+        if ($AuthUser) {
+            $notFollowingUsers = User::whereNotIn('id', $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id))->limit(4)->get();
+        } else {
+            $notFollowingUsers = User::latest()->limit(4)->get();
+        }
+
+        return view('profile', compact('user', 'Ideas', 'notFollowingUsers'));
     }
 
     public function edit($id)
     {
         $profileEdit = true;
         $user = User::where('id', $id)->first();
-        if ($id != auth()->user()->id) {
+        $AuthUser = auth()->user();
+
+        if ($id != $AuthUser->id) {
             return abort(403, 'unauthorized');
         }
         if (request()->has('search')) {
@@ -31,7 +42,14 @@ class UserController extends Controller
         } else {
             $Ideas = $user->ideas()->paginate(3);
         }
-        return view('profile', compact('user', 'Ideas', 'profileEdit'));
+
+        if ($AuthUser) {
+            $notFollowingUsers = User::whereNotIn('id', $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id))->limit(4)->get();
+        } else {
+            $notFollowingUsers = User::latest()->limit(4)->get();
+        }
+
+        return view('profile', compact('user', 'Ideas', 'profileEdit', 'notFollowingUsers'));
     }
 
     public function update(User $user)

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\IdeaRequest;
 use App\Models\idea;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -25,53 +26,44 @@ class IdeaController extends Controller
             }
         }
 
-        // $followingUsersIds = $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id);
-        // dd($followingUsersIds);
         if ($AuthUser) {
             $notFollowingUsers = User::whereNotIn('id', $AuthUser->following()->pluck('following_id')->prepend($AuthUser->id))->limit(4)->get();
         } else {
             $notFollowingUsers = User::latest()->limit(4)->get();
         }
-        // dd($notFollowingUsers);
+
         return view("home", compact('ideas', 'notFollowingUsers'));
     }
 
-    public function store()
+    public function store(IdeaRequest $request)
     {
-        $vali = request()->validate([
-            "idea" => "required|min:2|max:240",
-        ]);
-        $vali['user_id'] = auth()->user()->id;
-        idea::create($vali);
+
+        $idea = new Idea();
+        $idea->idea = $request->idea;
+        $idea->user_id = auth()->user()->id;
+        $idea->save();
         return redirect()->route('home')->with('success', 'Idea created Successfully!');
     }
 
     public function show(idea $idea)
     {
-        // dump($idea);
         return view("show", compact('idea'));
     }
 
     public function edit(idea $idea)
     {
-        if ($idea['user_id'] != auth()->user()->id) {
-            return abort(403, 'unauthorized');
-        }
+        $this->authorize('update', $idea);
+
         $edit = true;
         return view("show", compact('idea', 'edit'));
     }
 
-    public function update(idea $idea)
+    public function update(IdeaRequest $request, idea $idea)
     {
-        $vali = request()->validate([
-            "idea" => "required|min:2|max:240",
-        ]);
 
-        if ($idea['user_id'] != auth()->user()->id) {
-            return abort(403, 'unauthorized');
-        }
+        $this->authorize('update', $idea);
 
-        $idea->idea = $vali['idea'];
+        $idea->idea = $request->idea;
         $idea->save();
 
         return redirect()->route('ideas.show', $idea)->with('success', 'Idea Updated Successfully!');
@@ -88,12 +80,9 @@ class IdeaController extends Controller
 
     public function destroy(idea $idea)
     {
-        // $idea = idea::where('id', $idea)->first();
-        if ($idea['user_id'] == auth()->user()->id) {
-            $idea->delete();
-            return redirect()->route('home')->with('success', 'Idea deleted Successfully!');
-        } else {
-            return abort(403, 'unauthorized');
-        }
+        $this->authorize('delete', $idea);
+
+        $idea->delete();
+        return redirect()->route('home')->with('success', 'Idea deleted Successfully!');
     }
 }

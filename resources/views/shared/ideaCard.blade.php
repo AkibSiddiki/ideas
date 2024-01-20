@@ -13,8 +13,7 @@
             @if(!($edit ?? false))
             <div class="d-flex align-items-center">
                 <a class="btn btn-outline-primary mx-1" href="{{route('ideas.show', $idea)}}">view</a>
-                @auth
-                @if (Auth::user()->id==$idea->user_id)
+                @if (Auth::check() && Auth::user()->can('update', $idea))
                 <a class="btn btn-outline-primary mx-1" href="{{route('ideas.edit', $idea)}}">Edit</a>
                 <form action="{{route('ideas.destroy', $idea)}}" method="POST">
                     @csrf
@@ -22,7 +21,6 @@
                     <button class="btn btn-outline-primary mx-1">X</button>
                 </form>
                 @endif
-                @endauth
             </div>
             @endif
         </div>
